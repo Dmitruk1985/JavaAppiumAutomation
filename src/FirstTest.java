@@ -85,6 +85,12 @@ public class FirstTest {
 
     }
 
+    @Test
+    public void searchFieldContainsRightTextTest(){
+        assertElementHasText(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Search Wikipedia", "Search field has wrong text");
+    }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -126,5 +132,11 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.clear();
         return element;
+    }
+
+    private void assertElementHasText(By by, String expected_text, String error_message){
+        WebElement element = waitForElementPresent(by, "Can't find element", 5);
+        String actual_text = element.getAttribute("text");
+        Assert.assertEquals(error_message, expected_text, actual_text);
     }
 }
