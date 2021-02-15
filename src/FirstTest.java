@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -66,7 +67,7 @@ public class FirstTest {
     }
 
     @Test
-    public void compareArticleTitle(){
+    public void compareArticleTitle() {
         waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Can't locate search field", 5);
 
@@ -86,11 +87,43 @@ public class FirstTest {
     }
 
     @Test
-    public void searchFieldContainsRightTextTest(){
+    public void cancelSearchTest() {
+        //Кликаем по полю поиска
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Can't locate search field", 5);
+
+        //Вводим значение "Java"
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java", "Cannot find search input", 5);
+
+        String itemXpath = "//*[@resource-id='org.wikipedia:id/page_list_item_container']";
+
+        //Дожидаемся появления результата поиска
+        waitForElementPresent(By.xpath(itemXpath), "Can't locate result item", 5);
+
+        List<WebElement> listOfItems = driver.findElements(By.xpath(itemXpath));
+
+        //Проверяем, что найдено более 1 результата
+        Assert.assertTrue("List has <=1 result", listOfItems.size() > 1);
+
+        //Очищаем поле поиска
+        waitForElementAndClick(By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X to cancel search", 5);
+
+        //Дожидаемся исчезновения результата поиска
+        waitForElementNotPresent(By.xpath(itemXpath),"Result item is still present", 5);
+
+        listOfItems = driver.findElements(By.xpath(itemXpath));
+
+        //Проверяем, что результаты поиска исчезли
+        Assert.assertTrue("List of results is not empty", listOfItems.size() == 0);
+    }
+
+    @Test
+    public void searchFieldContainsRightTextTest() {
         assertElementHasText(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Search Wikipedia", "Search field doesn't contains expected text");
     }
-
 
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
@@ -135,7 +168,7 @@ public class FirstTest {
         return element;
     }
 
-    private void assertElementHasText(By by, String expected_text, String error_message){
+    private void assertElementHasText(By by, String expected_text, String error_message) {
         WebElement element = waitForElementPresent(by, "Can't find element", 5);
         String actual_text = element.getAttribute("text");
         Assert.assertTrue(error_message, actual_text.contains(expected_text));
