@@ -120,6 +120,31 @@ public class FirstTest {
     }
 
     @Test
+    public void allSearchResultsHaveKeyWordTest() {
+        //Кликаем по полю поиска
+        waitForElementAndClick(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Can't locate search field", 5);
+
+        //Вводим значение "Java"
+        waitForElementAndSendKeys(By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java", "Cannot find search input", 5);
+
+        String headerXpath = "//*[@resource-id='org.wikipedia:id/page_list_item_title']";
+
+        //Дожидаемся появления результата поиска
+        waitForElementPresent(By.xpath(headerXpath), "Can't locate result item", 5);
+
+        //Получаем список всех заголовков результатов
+        List<WebElement> headersList = driver.findElements(By.xpath(headerXpath));
+
+        //Проверяем для каждого заголовка наличие в нем ключевого слова
+        for (int i = 0; i < headersList.size(); i++) {
+            Assert.assertTrue("Serch result №"+headersList.get(i)+" doesn't contains key word",
+                    headersList.get(i).getAttribute("text").contains("Java"));
+        }
+    }
+
+    @Test
     public void searchFieldContainsRightTextTest() {
         assertElementHasText(By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Search Wikipedia", "Search field doesn't contains expected text");
