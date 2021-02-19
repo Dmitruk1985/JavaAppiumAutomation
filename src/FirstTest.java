@@ -315,6 +315,63 @@ public class FirstTest {
                 "Can't find article after returning from background", 5);
     }
 
+    @Test
+    public void saveTwoArticlesToMyList() {
+        String listName = "MyList";
+        String firstTitle = "Java (programming language)";
+        String secondTitle = "Java";
+
+        //Добавляем в список 2 статьи
+        addArticleToMyList("Java", firstTitle, listName, true);
+        addArticleToMyList("Java", secondTitle, listName, false);
+
+        //Открываем раздел со списками
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='My lists']"),
+                "Can't find 'My lists' button",
+                5);
+
+        //Выбираем нужный список
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + listName + "']"),
+                "Can't find created folder",
+                5);
+
+        //Удаляем первую статью из списка (через свайп плохо работает, реализовано через кнопки)
+        //Нажимаем кнопку "опции" у заданной статьи
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title' and @text='" + firstTitle + "']" +
+                        "/ancestor::*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@content-desc='More options']"),
+                "Can't find options button",
+                5);
+
+        //Нажимаем кнопку "удалить"
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/reading_list_item_remove_text"),
+                "Can't find options button",
+                5);
+
+        //Убеждаемся, что статья удалена
+        waitForElementNotPresent(
+                By.xpath("//*[@text='" + firstTitle + "']"),
+                "Article " + firstTitle + " is not deleted",
+                5);
+
+        //Убеждаемся, что вторая статья осталась, и кликаем по ней
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + secondTitle + "']"),
+                "Can't find article " + secondTitle,
+                5);
+
+        WebElement title_element = waitForElementPresent(By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title", 15);
+        String secondTitleAfterDeleting = title_element.getAttribute("text");
+
+        //Проверяем, что заголовок не изменился
+        Assert.assertEquals("Article's title is wrong", secondTitle, secondTitleAfterDeleting);
+    }
+
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -419,6 +476,83 @@ public class FirstTest {
     private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    private void addArticleToMyList(String searchName, String title, String listName, boolean firstArticle) {
+
+        //Кликаем по полю поиска
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Can't locate search field",
+                5);
+
+        //Вводим название статьи
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                searchName,
+                "Cannot find search input",
+                5);
+
+        //Кликаем по нужной статье
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + title + "']"),
+                "Can't locate search field",
+                5);
+
+        WebElement title_element = waitForElementPresent(By.id("org.wikipedia:id/view_page_title_text"),
+                "Cannot find article title", 15);
+
+        //Открываем меню "Опции"
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Can't find button to open article options",
+                5);
+
+        //Выбираем пункт "Добавить в список"
+        waitForElementAndClick(
+                By.xpath("//*[@text='Add to reading list']"),
+                "Can't find option to add article to list",
+                5);
+
+        //Если добавляем статью в первый раз
+        if (firstArticle) {
+            //Нажимаем кнопку "GOT IT"
+            waitForElementAndClick(
+                    By.id("org.wikipedia:id/onboarding_button"),
+                    "Can't find 'GOT IT' button",
+                    5);
+
+            //Очищаем поле для ввода названия списка
+            waitForElementAndClear(
+                    By.id("org.wikipedia:id/text_input"),
+                    "Can't find input to save name", 5);
+
+            //Вводим название списка
+            waitForElementAndSendKeys(
+                    By.id("org.wikipedia:id/text_input"),
+                    listName,
+                    "Can't put text into article input",
+                    5);
+
+            //Нажимаем кнопку "ОК"
+            waitForElementAndClick(
+                    By.xpath("//*[@text='OK']"),
+                    "Can't press 'OK' button",
+                    5);
+        } else {
+            //Выбираем ранее созданный список
+            waitForElementAndClick(
+                    By.xpath("//android.widget.TextView[@text='" + listName + "']"),
+                    "Can't find list " + listName,
+                    5);
+
+        }
+
+        //Закрываем статью
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Can't close article",
+                5);
     }
 
 }
