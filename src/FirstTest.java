@@ -371,6 +371,12 @@ public class FirstTest {
         Assert.assertEquals("Article's title is wrong", secondTitle, secondTitleAfterDeleting);
     }
 
+    @Test
+    public void assertElementPresent() {
+        openArticle("Java", "Java (programming language)");
+        driver.findElement(By.id("org.wikipedia:id/view_page_title_text"));
+    }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -476,6 +482,26 @@ public class FirstTest {
     private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+    private void openArticle(String searchValue, String articleTitle) {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Can't locate search field",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                searchValue,
+                "Cannot find search input",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + articleTitle + "']"),
+                "Can't locate search field",
+                5);
+
     }
 
     private void addArticleToMyList(String searchName, String title, String listName, boolean firstArticle) {
