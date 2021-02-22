@@ -258,43 +258,50 @@ public class FirstTest {
         String search_line = "Java";
 
 
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Can't locate search field",
-                5);
+        try {
+            waitForElementAndClick(
+                    By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                    "Can't locate search field",
+                    5);
 
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                search_line,
-                "Cannot find search input",
-                5);
+            waitForElementAndSendKeys(
+                    By.xpath("//*[contains(@text, 'Search…')]"),
+                    search_line,
+                    "Cannot find search input",
+                    5);
 
-        waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "Can't find topic" + search_line,
-                15);
+            waitForElementAndClick(
+                    By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                    "Can't find topic" + search_line,
+                    15);
 
-        String title_before_rotation = waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Can't find title of article",
-                15);
+            String title_before_rotation = waitForElementAndGetAttribute(
+                    By.id("org.wikipedia:id/view_page_title_text"),
+                    "text",
+                    "Can't find title of article",
+                    15);
 
-        driver.rotate(ScreenOrientation.LANDSCAPE);
-        String title_after_rotation = waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Can't find title of article",
-                15);
+            driver.rotate(ScreenOrientation.LANDSCAPE);
+            String title_after_rotation = waitForElementAndGetAttribute(
+                    By.id("org.wikipedia:id/view_page_title_text"),
+                    "text",
+                    "Can't find title of article",
+                    15);
 
-        Assert.assertEquals("Article title have been change after rotation", title_before_rotation, title_after_rotation);
-        driver.rotate(ScreenOrientation.PORTRAIT);
-        String title_after_second_rotation = waitForElementAndGetAttribute(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "text",
-                "Can't find title of article",
-                15);
-        Assert.assertEquals("Article title have been change after rotation", title_before_rotation, title_after_second_rotation);
+            Assert.assertEquals("Article title have been change after rotation", title_before_rotation, title_after_rotation);
+            driver.rotate(ScreenOrientation.PORTRAIT);
+            String title_after_second_rotation = waitForElementAndGetAttribute(
+                    By.id("org.wikipedia:id/view_page_title_text"),
+                    "text",
+                    "Can't find title of article",
+                    15);
+            Assert.assertEquals("Article title have been change after rotation", title_before_rotation, title_after_second_rotation);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Test is finished with error. Divece's orientation will be set to portrait.");
+        } finally {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        }
     }
 
     @Test
