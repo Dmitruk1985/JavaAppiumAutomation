@@ -29,6 +29,7 @@ public class FirstTest {
         capabilities.setCapability("appPackage", "org.wikipedia");
         capabilities.setCapability("appActivity", ".main.MainActivity");
         capabilities.setCapability("app", "D:\\Documents\\IT\\Testing\\Mobile_Automation\\github\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        capabilities.setCapability("orientation", "PORTRAIT");
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
     }
@@ -257,8 +258,6 @@ public class FirstTest {
     public void testChangeScreenOrientationOnSearchResults() {
         String search_line = "Java";
 
-
-        try {
             waitForElementAndClick(
                     By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                     "Can't locate search field",
@@ -296,12 +295,6 @@ public class FirstTest {
                     "Can't find title of article",
                     15);
             Assert.assertEquals("Article title have been change after rotation", title_before_rotation, title_after_second_rotation);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Test is finished with error. Divece's orientation will be set to portrait.");
-        } finally {
-            driver.rotate(ScreenOrientation.PORTRAIT);
-        }
     }
 
     @Test
