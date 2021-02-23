@@ -379,9 +379,9 @@ public class FirstTest {
     }
 
     @Test
-    public void assertElementPresent() {
+    public void assertTitlePresent() {
         openArticle("Java", "Java (programming language)");
-        driver.findElement(By.id("org.wikipedia:id/view_page_title_text"));
+        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"), "Can't find articles's title");
     }
 
 
@@ -586,6 +586,11 @@ public class FirstTest {
                 By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
                 "Can't close article",
                 5);
+    }
+
+    public void assertElementPresent(By by, String error_message) {
+           List<WebElement> elements = driver.findElements(by);
+           Assert.assertTrue(error_message, elements.size()>0);
     }
 
 }
