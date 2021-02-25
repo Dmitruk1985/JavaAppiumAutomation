@@ -2,6 +2,9 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SearchPageObject extends MainPageObject {
     private static final String
@@ -10,7 +13,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
+            SEARCH_ARTICLE_TITLE = "//*[@resource-id='org.wikipedia:id/page_list_item_title']";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -44,6 +48,10 @@ public class SearchPageObject extends MainPageObject {
         this.waitForElementNotPresent(By.id(SEARCH_CANCEL_BUTTON), "Search cancel button is still present", 5);
     }
 
+    public void waitForSearchResultsToDissappear() {
+        this.waitForElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "Search results are still present", 5);
+    }
+
     public void clickCancelSearch() {
         this.waitForElementAndClick(By.id(SEARCH_CANCEL_BUTTON), "Can't find and click search cancel button", 5);
     }
@@ -66,7 +74,22 @@ public class SearchPageObject extends MainPageObject {
         this.waitForElementPresent(By.xpath(SEARCH_EMPTY_RESULT_ELEMENT), "Can't find empty result label", 15);
     }
 
-    public void assertThereIsNoResultsOfSearch(){
+    public void assertThereIsNoResultsOfSearch() {
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed not to find any results");
+    }
+
+    public List<WebElement> getAllSearchTitles(){
+        return driver.findElements(By.xpath(SEARCH_ARTICLE_TITLE));
+    }
+
+    public void assertSearchFieldContainsRightText() {
+        assertElementHasText(By.xpath(SEARCH_INIT_ELEMENT),
+                "Search Wikipedia", "Search field doesn't contains expected text");
+    }
+
+    public void openArticle(String search_line, String article_title) {
+        initSearchInput();
+        typeSearchLine(search_line);
+        clickByArticleWithSubstring(article_title);
     }
 }

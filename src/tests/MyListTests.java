@@ -27,4 +27,26 @@ public class MyListTests extends CoreTestCase {
         myListsPageObject.openFolderByName(name_of_folder);
         myListsPageObject.swipeByArticleToDelete(article_title);
     }
+
+    @Test
+    public void testSaveTwoArticlesToMyList() {
+
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        NavigationUI navigationUI = new NavigationUI(driver);
+        MyListsPageObject myListsPageObject = new MyListsPageObject(driver);
+        String name_of_folder = "MyList";
+        String firstTitle = "Java (programming language)";
+        String secondTitle = "Java";
+
+        articlePageObject.openArticleAndAddItToMyList("Java", firstTitle, name_of_folder, true);
+        articlePageObject.openArticleAndAddItToMyList("Java", secondTitle, name_of_folder, false);
+        navigationUI.clickMyLists();
+        myListsPageObject.openFolderByName(name_of_folder);
+        myListsPageObject.clickOptionsButtonByTitle(firstTitle);
+        myListsPageObject.clickDeleteOption();
+        myListsPageObject.assertArticleIsNotPresentInMyList(firstTitle);
+        myListsPageObject.openArticle(secondTitle);
+        String secondTitleAfterDeleting = articlePageObject.getArticleTitle();
+        assertEquals("Article's title was changed", secondTitle, secondTitleAfterDeleting);
+    }
 }

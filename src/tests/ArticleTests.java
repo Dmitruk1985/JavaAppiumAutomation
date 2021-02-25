@@ -29,4 +29,14 @@ public class ArticleTests extends CoreTestCase {
         articlePageObject.waitForTitleElement();
         articlePageObject.swipeToFooter();
     }
+
+    @Test
+    public void testAssertTitlePresent() {
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+
+        searchPageObject.openArticle("Java", "Java (programming language)");
+        articlePageObject.assertArticleHasTitle();
+    }
 }

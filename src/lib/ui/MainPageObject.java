@@ -103,6 +103,7 @@ public class MainPageObject {
                 .press(right_x, middle_y)
                 .waitAction(300)
                 .moveTo(left_x, middle_y)
+                .release()
                 .perform();
     }
 
@@ -124,105 +125,17 @@ public class MainPageObject {
         return element.getAttribute(attribute);
     }
 
-    public void openArticle(String searchValue, String articleTitle) {
 
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Can't locate search field",
-                5);
-
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                searchValue,
-                "Cannot find search input",
-                5);
-
-        waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + articleTitle + "']"),
-                "Can't locate search field",
-                5);
-
-    }
-
-    public void addArticleToMyList(String searchName, String title, String listName, boolean firstArticle) {
-
-        //Кликаем по полю поиска
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Can't locate search field",
-                5);
-
-        //Вводим название статьи
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                searchName,
-                "Cannot find search input",
-                5);
-
-        //Кликаем по нужной статье
-        waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='" + title + "']"),
-                "Can't locate search field",
-                5);
-
-        WebElement title_element = waitForElementPresent(By.id("org.wikipedia:id/view_page_title_text"),
-                "Cannot find article title", 15);
-
-        //Открываем меню "Опции"
-        waitForElementAndClick(
-                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
-                "Can't find button to open article options",
-                5);
-
-        //Выбираем пункт "Добавить в список"
-        waitForElementAndClick(
-                By.xpath("//*[@text='Add to reading list']"),
-                "Can't find option to add article to list",
-                5);
-
-        //Если добавляем статью в первый раз
-        if (firstArticle) {
-            //Нажимаем кнопку "GOT IT"
-            waitForElementAndClick(
-                    By.id("org.wikipedia:id/onboarding_button"),
-                    "Can't find 'GOT IT' button",
-                    5);
-
-            //Очищаем поле для ввода названия списка
-            waitForElementAndClear(
-                    By.id("org.wikipedia:id/text_input"),
-                    "Can't find input to save name", 5);
-
-            //Вводим название списка
-            waitForElementAndSendKeys(
-                    By.id("org.wikipedia:id/text_input"),
-                    listName,
-                    "Can't put text into article input",
-                    5);
-
-            //Нажимаем кнопку "ОК"
-            waitForElementAndClick(
-                    By.xpath("//*[@text='OK']"),
-                    "Can't press 'OK' button",
-                    5);
-        } else {
-            //Выбираем ранее созданный список
-            waitForElementAndClick(
-                    By.xpath("//android.widget.TextView[@text='" + listName + "']"),
-                    "Can't find list " + listName,
-                    5);
-
-        }
-
-        //Закрываем статью
-        waitForElementAndClick(
-                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
-                "Can't close article",
-                5);
-    }
 
     public void assertElementPresent(By by, String error_message) {
         List<WebElement> elements = driver.findElements(by);
         Assert.assertTrue(error_message, elements.size()>0);
+    }
+
+    public void assertAllElementsContainText(List<WebElement> elements, String text){
+        for (int i = 0; i < elements.size(); i++) {
+            Assert.assertTrue("Element № " + elements.get(i) + " doesn't contains text: " + text,
+                    elements.get(i).getAttribute("text").contains(text));
+        }
     }
 }
