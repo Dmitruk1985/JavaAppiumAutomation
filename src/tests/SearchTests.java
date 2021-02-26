@@ -80,6 +80,17 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.assertAllElementsContainText(titles, search_line);
     }
 
+    @Test
+    public void testSearchResultsHaveTitleAndDescription() {
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInputAndTypeSearchLine("Java");
+        searchPageObject.waitForElementByTitleAndDescription("Java", "Island of Indonesia");
+        searchPageObject.waitForElementByTitleAndDescription("JavaScript", "Programming language");
+        searchPageObject.waitForElementByTitleAndDescription("Java (programming language)", "Object-oriented programming language");
+
+    }
 
 
 }

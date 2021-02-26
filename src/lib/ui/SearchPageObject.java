@@ -14,7 +14,9 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']//*[@resource-id='org.wikipedia:id/page_list_item_container']",
             SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
-            SEARCH_ARTICLE_TITLE = "//*[@resource-id='org.wikipedia:id/page_list_item_title']";
+            SEARCH_ARTICLE_TITLE = "//*[@resource-id='org.wikipedia:id/page_list_item_title']",
+            SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_title' and @text='{TITLE}']" +
+                    "/following-sibling::*[@resource-id='org.wikipedia:id/page_list_item_description' and @text='{DESCRIPTION}']";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -24,7 +26,17 @@ public class SearchPageObject extends MainPageObject {
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
     }
+
+    private static String getResultSearchByTitleAndDescription(String title, String description) {
+        return SEARCH_RESULT_BY_TITLE_AND_DESCRIPTION_TPL.replace("{TITLE}", title).replace("{DESCRIPTION}", description);
+    }
     /*TEMPLATES METHOTDS*/
+
+    public void waitForElementByTitleAndDescription(String title, String description) {
+        String element_xpath = getResultSearchByTitleAndDescription(title, description);
+        waitForElementPresent(By.xpath(element_xpath), "Can't find search result with title: " + title + " and description: " + description);
+
+    }
 
     public void initSearchInput() {
         this.waitForElementAndClick(By.xpath(SEARCH_INIT_ELEMENT), "Can't find search init element", 5);
@@ -33,6 +45,11 @@ public class SearchPageObject extends MainPageObject {
 
     public void typeSearchLine(String search_line) {
         this.waitForElementAndSendKeys(By.xpath(SEARCH_INPUT), search_line, "Can't find and type into search input", 5);
+    }
+
+    public void initSearchInputAndTypeSearchLine(String search_line) {
+        initSearchInput();
+        typeSearchLine(search_line);
     }
 
     public void waitForSearchResult(String substring) {
@@ -78,7 +95,7 @@ public class SearchPageObject extends MainPageObject {
         this.assertElementNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed not to find any results");
     }
 
-    public List<WebElement> getAllSearchTitles(){
+    public List<WebElement> getAllSearchTitles() {
         return driver.findElements(By.xpath(SEARCH_ARTICLE_TITLE));
     }
 
