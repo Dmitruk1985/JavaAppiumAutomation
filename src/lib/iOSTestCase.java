@@ -20,7 +20,6 @@ public class iOSTestCase extends TestCase {
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("deviceName", "iPhone SE");
         capabilities.setCapability("platformVersion", "11.3");
-        capabilities.setCapability("automationName", "Appium");
         capabilities.setCapability("app", "D:\\Documents\\IT\\Testing\\Mobile_Automation\\github\\JavaAppiumAutomation\\apks\\Wikipedia.app");
         capabilities.setCapability("orientation", "PORTRAIT");
 
