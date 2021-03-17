@@ -22,7 +22,7 @@ public class MainPageObject {
     public WebElement waitForElementPresent(String locator, String error_message, long timeoutInSeconds) {
         By by = getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.withMessage(error_message + "\n");
+        wait.withMessage(error_message + "\n" + "actual locator: " + by.toString());
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
@@ -143,5 +143,21 @@ public class MainPageObject {
         if (by_type.equals("xpath")) return By.xpath(locator);
         else if (by_type.equals("id")) return By.id(locator);
         else throw new IllegalArgumentException("Cann't get type of locator: " + locator);
+    }
+
+    public boolean isElementLocatedOntheScreen(String locator) {
+
+        int element_location_by_y = waitForElementPresent(locator, "Cann't find element by locator", 1).getLocation().getY();
+        int screen_size_by_y = driver.manage().window().getSize().getHeight();
+        return element_location_by_y < screen_size_by_y;
+    }
+
+    public void swipeUpTillElementAppear(String locator, String error_message, int max_swipes) {
+        int already_swiped = 0;
+        while (isElementLocatedOntheScreen(locator)) {
+            if (already_swiped > max_swipes) Assert.assertTrue( error_message, isElementLocatedOntheScreen(locator));
+            swipeUpQuick();
+            ++already_swiped;
+        }
     }
 }
