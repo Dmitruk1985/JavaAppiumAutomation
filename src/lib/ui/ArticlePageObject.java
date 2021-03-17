@@ -138,5 +138,7 @@ public class ArticlePageObject extends MainPageObject {
         assertElementPresent(by, "Can't find articles's title");
     }
 
-
+public void addArticlesToMySaved(){
+        waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Cann't find ption to add article", 5);
+}
 }
