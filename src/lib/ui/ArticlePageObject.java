@@ -5,6 +5,7 @@ import lib.Platform;
 import lib.ui.factories.SearchPageObjectFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class ArticlePageObject extends MainPageObject {
 
@@ -21,7 +22,7 @@ public class ArticlePageObject extends MainPageObject {
             CLOSE_ARTICLE_BUTTON,
             FOLDER_ADD_ARTICLE_TPL;
 
-    public ArticlePageObject(AppiumDriver driver) {
+    public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 

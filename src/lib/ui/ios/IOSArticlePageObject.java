@@ -2,6 +2,7 @@ package lib.ui.ios;
 
 import io.appium.java_client.AppiumDriver;
 import lib.ui.ArticlePageObject;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class IOSArticlePageObject extends ArticlePageObject {
 
@@ -15,7 +16,7 @@ public class IOSArticlePageObject extends ArticlePageObject {
         FOLDER_ADD_ARTICLE_TPL = "xpath://android.widget.TextView[@text='{FOLDER}']";
     }
 
-    public IOSArticlePageObject(AppiumDriver driver) {
+    public IOSArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
 }
