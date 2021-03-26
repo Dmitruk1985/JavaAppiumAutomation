@@ -2,10 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.Platform;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListsPageObject;
-import lib.ui.NavigationUI;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListsPageObjectFactory;
 import lib.ui.factories.NavigationUIFactory;
@@ -14,6 +11,9 @@ import org.junit.Test;
 
 public class MyListTests extends CoreTestCase {
     private static final String name_of_folder = "Learning programming";
+    private static final String login = "dmitry.dmitruk";
+    private static final String password = "Dmitruk1985";
+
     @Test
     public void testSaveFirstArticleToMyList() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
@@ -23,13 +23,25 @@ public class MyListTests extends CoreTestCase {
 
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
+        searchPageObject.clickByArticleWithSubstring("bject-oriented programming language");
         articlePageObject.waitForTitleElement();
         String article_title = articlePageObject.getArticleTitle();
         if(Platform.getInstance().isAndroid()) articlePageObject.addArticleToMyList(name_of_folder);
         else articlePageObject.addArticlesToMySaved();
+        if(Platform.getInstance().isMw()){
+            AuthorizationPageObject auth = new AuthorizationPageObject(driver);
+            auth.clickAuthButton();
+            auth.enterLoginData(login, password);
+            auth.submitForm();
+            articlePageObject.waitForTitleElement();
+            assertEquals("We are not on the same page after login",
+                    article_title,
+                    articlePageObject.getArticleTitle());
+            articlePageObject.addArticlesToMySaved();
+        }
         articlePageObject.closeArticle();
         navigationUI.clickMyLists();
+        navigationUI.openNavigation();
         if(Platform.getInstance().isAndroid()) myListsPageObject.openFolderByName(name_of_folder);
         myListsPageObject.swipeByArticleToDelete(article_title);
     }

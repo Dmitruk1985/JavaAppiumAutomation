@@ -85,7 +85,7 @@ public class Platform {
 
     private ChromeOptions getMwChromeOptions(){
 
-        Map<String, Object> deviceMetrics = new HashMap<>();
+      /*  Map<String, Object> deviceMetrics = new HashMap<>();
         deviceMetrics.put("width", 360);
         deviceMetrics.put("height", 640);
         deviceMetrics.put("pixelRatio", 3.0);
@@ -96,9 +96,9 @@ public class Platform {
                 "\n" +
                 "AppleWebKit/535.19 (KHTML, like Gecko) \n" +
                 "\n" +
-                "Chrome/18.0.1025.166 Mobile Safari/535.19");
+                "Chrome/18.0.1025.166 Mobile Safari/535.19");*/
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("window-size=340,640");
+        chromeOptions.addArguments("--window-size=360,640");
         return chromeOptions;
     }
 

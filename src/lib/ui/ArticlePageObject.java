@@ -16,6 +16,7 @@ public class ArticlePageObject extends MainPageObject {
             FOOTER_ELEMENT,
             OPTIONS_BUTTON,
             OPTIONS_ADD_TO_MY_LIST_BUTTON,
+            OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
             ADD_TO_MY_LIST_OVERLAY,
             MY_LIST_NAME_INPUT,
             MY_LIST_OK_BUTTON,
@@ -36,13 +37,17 @@ public class ArticlePageObject extends MainPageObject {
 
     public String getArticleTitle() {
         WebElement title_element = waitForTitleElement();
-        if(Platform.getInstance().isAndroid()) return title_element.getAttribute("text");
-        else return title_element.getAttribute("name");
+        if (Platform.getInstance().isAndroid()) return title_element.getAttribute("text");
+        else if (Platform.getInstance().isIOS()) return title_element.getAttribute("name");
+        else return title_element.getText();
     }
 
     public void swipeToFooter() {
-        if(Platform.getInstance().isAndroid()) this.swipeUpToFindElement(FOOTER_ELEMENT, "Can't find the end of article", 40);
-        else swipeUpTillElementAppear(FOOTER_ELEMENT, "Can't find the end of article", 40);
+        if (Platform.getInstance().isAndroid())
+            this.swipeUpToFindElement(FOOTER_ELEMENT, "Can't find the end of article", 40);
+        else if (Platform.getInstance().isIOS())
+            swipeUpTillElementAppear(FOOTER_ELEMENT, "Can't find the end of article", 40);
+        else scrollWebPageTillElementNotVisible(FOOTER_ELEMENT, "Can't find the end of article", 40);
     }
 
     public void addArticleToMyList(String name_of_folder) {
@@ -80,10 +85,14 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public void closeArticle() {
-        this.waitForElementAndClick(
-                CLOSE_ARTICLE_BUTTON,
-                "Can't close article",
-                5);
+
+        if(Platform.getInstance().isIOS() || Platform.getInstance().isAndroid()) {
+            this.waitForElementAndClick(
+                    CLOSE_ARTICLE_BUTTON,
+                    "Can't close article",
+                    5);
+        }
+
     }
 
     public void openArticleAndAddItToMyList(String searchName, String article_title, String name_of_folder, boolean firstArticle) {
@@ -139,7 +148,15 @@ public class ArticlePageObject extends MainPageObject {
         assertElementPresent(by, "Can't find articles's title");
     }
 
-public void addArticlesToMySaved(){
-        waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Cann't find ption to add article", 5);
-}
+    public void addArticlesToMySaved() {
+        if(Platform.getInstance().isMw()) removeArticleFromSavedIfItAdded();
+        waitForElementAndClick(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Cann't find option to add article", 5);
+    }
+
+    public void removeArticleFromSavedIfItAdded() {
+        if (isElementPresent(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON)) {
+            waitForElementAndClick(OPTIONS_REMOVE_FROM_MY_LIST_BUTTON, "Can't remove article from saved", 1);
+            waitForElementNotPresent(OPTIONS_ADD_TO_MY_LIST_BUTTON, "Can't find button to add article to saved", 5);
+        }
+    }
 }

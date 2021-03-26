@@ -5,6 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import junit.framework.TestCase;
 import lib.ui.WelcomePageObject;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -24,6 +25,7 @@ public class CoreTestCase extends TestCase {
         rotateScreenPortrait();
         skipWelcomePageForIOSApp();
         openWikiWebPageForMobileWeb();
+        if (Platform.getInstance().isMw()) driver.manage().window().setSize(new Dimension(360, 640));
     }
 
     @Override
@@ -37,7 +39,7 @@ public class CoreTestCase extends TestCase {
             AppiumDriver driver = (AppiumDriver) this.driver;
             driver.rotate(ScreenOrientation.PORTRAIT);
         } else {
-            System.out.println("Method rotateScreenPortrait() do nothing for current platform: " + Platform.getInstance().getPlatformVar();
+            System.out.println("Method rotateScreenPortrait() do nothing for current platform: " + Platform.getInstance().getPlatformVar());
         }
 
     }
