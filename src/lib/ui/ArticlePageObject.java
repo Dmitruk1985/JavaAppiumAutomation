@@ -91,7 +91,7 @@ public class ArticlePageObject extends MainPageObject {
                     CLOSE_ARTICLE_BUTTON,
                     "Can't close article",
                     5);
-        }
+        } else System.out.println("Method closeArticle() do nothing for current platform");
 
     }
 

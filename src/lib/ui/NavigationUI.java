@@ -14,12 +14,21 @@ abstract public class NavigationUI extends MainPageObject {
         super(driver);
     }
 
-    public void clickMyLists() {
-        if(Platform.getInstance().isMw()) tryClickElementWithFewAttempts(MY_LISTS_LINK, "Can't find navigation button", 5);
-        this.waitForElementAndClick(
-                MY_LISTS_LINK,
-                "Can't find 'My lists' button",
-                5);
+    public void clickMyLists()
+    {
+        if (Platform.getInstance().isMw()) {
+            this.tryClickElementWithFewAttempts(
+                    MY_LISTS_LINK,
+                    "Cannot find navigation button to My list",
+                    5
+            );
+        } else {
+            this.waitForElementAndClick(
+                    MY_LISTS_LINK,
+                    "Cannot find navigation button to My list",
+                    5
+            );
+        }
     }
 
     public void openNavigation() {

@@ -25,12 +25,12 @@ public class CoreTestCase extends TestCase {
         rotateScreenPortrait();
         skipWelcomePageForIOSApp();
         openWikiWebPageForMobileWeb();
-        if (Platform.getInstance().isMw()) driver.manage().window().setSize(new Dimension(360, 640));
+        if (Platform.getInstance().isMw()) driver.manage().window().setSize(new Dimension(340, 640));
     }
 
     @Override
     protected void tearDown() throws Exception {
-        driver.quit();
+       // driver.quit();
         super.tearDown();
     }
 

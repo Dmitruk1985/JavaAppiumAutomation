@@ -155,6 +155,7 @@ public class MainPageObject {
         if (by_type.equals("xpath")) return By.xpath(locator);
         else if (by_type.equals("id")) return By.id(locator);
         else if (by_type.equals("css")) return By.cssSelector(locator);
+        else if (by_type.equals("link")) return By.linkText(locator);
         else throw new IllegalArgumentException("Cann't get type of locator: " + locator);
     }
 

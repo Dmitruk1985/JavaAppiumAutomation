@@ -40,8 +40,8 @@ public class MyListTests extends CoreTestCase {
             articlePageObject.addArticlesToMySaved();
         }
         articlePageObject.closeArticle();
-        navigationUI.clickMyLists();
         navigationUI.openNavigation();
+        navigationUI.clickMyLists();
         if(Platform.getInstance().isAndroid()) myListsPageObject.openFolderByName(name_of_folder);
         myListsPageObject.swipeByArticleToDelete(article_title);
     }
