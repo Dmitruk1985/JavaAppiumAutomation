@@ -3,6 +3,7 @@ package lib.ui;
 import io.appium.java_client.AppiumDriver;
 import lib.Platform;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 abstract public class MyListsPageObject extends MainPageObject {
@@ -10,6 +11,7 @@ abstract public class MyListsPageObject extends MainPageObject {
     protected static String
             FOLDER_BY_NAME_TPL,
             ARTICLE_BY_TITLE_TPL,
+            ARTICLE_DESCRIPTION_BY_TITLE_TPL,
             OPTIONS_BUTTON_BY_TITLE,
             REMOVE_FROM_SAVED_BUTTON,
             DELETE_ARTICLE_OPTION;
@@ -103,5 +105,16 @@ abstract public class MyListsPageObject extends MainPageObject {
                 5);
     }
 
+    public String getArticleDescriptionXpathByTitleTpl(String article_title){
+          return ARTICLE_DESCRIPTION_BY_TITLE_TPL.replace("{TITLE}", article_title);
+    }
+
+    public void assertArticleIsPresentInMyListByDescription(String article_title) {
+        String description_xpath = getArticleDescriptionXpathByTitleTpl(article_title);
+        waitForElementPresent(
+                description_xpath,
+                "Article is still present in my lists",
+                5);
+    }
 
 }
